@@ -57,9 +57,10 @@ namespace Blockexplorer
 			services.AddTransient<ITransactionService, TransactionService>();
 			services.AddTransient<ITransactionRepository, TransactionRepositoryStub>();
 			services.AddTransient<ISearchService, SearchService>();
-			services.AddTransient<IApiService, ApiService>();
 			services.AddTransient<IInfoAdapter, InfoAdapter>();
-		}
+
+            services.AddSingleton<IApiService, ApiService>();
+        }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

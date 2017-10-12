@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Blockexplorer.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Blockexplorer.Models.Api;
 
 namespace Blockexplorer.Controllers
 {
@@ -16,14 +17,18 @@ namespace Blockexplorer.Controllers
 	    }
 
 	    [HttpGet]
-		public async Task<ActionResult> MoneySupplyJson()
+		public async Task<ActionResult> MoneySupply(ResponseFormat format = ResponseFormat.Json)
 	    {
 		    try
 		    {
 			    var info = await _apiService.GetInfo();
 			    if (info == null || !string.IsNullOrWhiteSpace(info.Errors))
 				    return StatusCode(StatusCodes.Status500InternalServerError);
-			    return Json(new { moneySupply = Convert.ToInt32(info.MoneySupply) });
+
+                if (format == ResponseFormat.String)
+                    return Content(Convert.ToInt32(info.MoneySupply).ToString());
+
+                return Json(new { moneySupply = Convert.ToInt32(info.MoneySupply) });
 			}
 		    catch (Exception)
 		    {
@@ -31,20 +36,17 @@ namespace Blockexplorer.Controllers
 			}
 	    }
 
-	    [HttpGet]
-	    public async Task<string> MoneySupplyString()
-	    {
-		    try
-		    {
-			    var info = await _apiService.GetInfo();
-			    if (info == null || !string.IsNullOrWhiteSpace(info.Errors))
-				    return "-1";
-			    return Convert.ToInt32(info.MoneySupply).ToString();
-		    }
-		    catch (Exception)
-		    {
-				return "-1";
-			}
-	    }
+        [HttpGet]
+        public async Task<ActionResult> StakingInfo()
+        {
+            try
+            {
+                var stakingInfo = await _apiService.GetStakingInfo()
+
+            } catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 	}
 }
